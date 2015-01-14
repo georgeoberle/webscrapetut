@@ -1,0 +1,158 @@
+---
+title: "rscrape"
+author: "George Oberle"
+date: "January 14, 2015"
+output: html_document
+---
+
+This is a tutorial meant for historians to use in order to use the rvest package to scrape the web.
+
+<h1>Harvesting the Web using r</h1>
+
+<h3>What is rvest?</h3>
+
+There are many useful sites that contain pieces of information that inform or are useful to your work. The ability to extract meaningful data is a useful tool to include in your toolbox. R has a package called rvest that allows you to simply scrape a website in order to use the content in a way that is more meaningful to your own work. The tool is free and open and works well within the RStudio environment.
+
+<h3>Access and Install</h3>
+
+Access is easy from Hadley Wickham’s GitHub (https://github.com/hadley/rvest).
+Basics
+
+Wickham created the tool in order to allow for typical web scraping tasks that many python users are familiar with. There are several good lessons available at The Programming Historian for those that are more familiar with python. The advantage of rvest is that it requires less time to understand the nuances of the programming language so the scholar can spend more time considering the crux of their scholarship. It is designed to work with magrittr which helps simplify your code. Rvest allows users to connect to a site within rstudio and then grab parts (or all) of a site. Users can navigate to websites using rstudio while connected in rvest.
+
+The documentation claims that users can do the following:
+
+    Create an html document from a url, a file on disk or a string containing html with html().
+    Select parts of a document using css selectors: html_nodes(doc, "table td")
+    Extract components with html_tag() (the name of the tag), html_text() (all text inside the tag), html_attr() (contents of a single attribute) and html_attrs() (all attributes).
+    Parse tables into data frames with html_table().
+    Extract, modify and submit forms with html_form(), set_values() and submit_form()
+    Navigate around a website as if you’re in a browser with html_session(), jump_to(), follow_link(), back(), forward(), submit_form() and so on.
+
+Some Packages that may be useful and why
+
+rvest: rvest makes it easy to harvest (a.k.a. scrape) data from web pages by providing some helpful wrappers around XML and httr. This package depends on R 3.0.1 or greater. There is a built in demo that shows users how the codes work.
+
+```{r}
+library(rvest)
+```
+Also helpful is magrittr: magrittr is a forward pipe function that allows the rvest user to construct programming statements. The following symbol %<% is used to combine functions.
+
+```{r}
+library(magrittr)
+```
+
+Optional Packages
+
+XML: Tools for parsing and generating XML within R. This package provides many approaches for both reading and creating XML (and HTML) documents (including DTDs). It allows access on local machines and via HTTP or FTP.  Mostly helpful for those that are more advanced users than I that want to follow the xpath methods of scraping.
+
+```{r}
+library(XML)
+```
+
+httr: Provides useful tools for working with HTTP. The API is based around http verbs (GET(), POST(), etc) with pluggable components to control the request (authenticate(), add_headers() and so on).
+
+```{r}
+library(httr)
+```
+
+sectr:Translates a CSS3 selector into an equivalent XPath expression. This allows us to use CSS selectors when working with the XML package as it can only evaluate XPath expressions. Also provided are convenience functions useful for using CSS selectors on XML nodes. This package is a port of the Python package “cssselect”
+
+```{r}
+library(selectr)
+```
+
+stringr: is a set of simple wrappers that make R’s string functions more consistent, simpler and easier to use.  It does this by ensuring that: function and argument names (and positions) are consistent, all functions deal with NA’s and zero length character appropriately, and the output data structures from each function matches the input data structures of other functions.
+
+```{r}
+library(stringr)
+```
+
+
+<H3>Examples for Historians</H3>
+
+I plan to develop several examples of common types of sources that historians encounter. Here are key library packages that may be helpful to load.
+
+Tools needed
+```{r}
+library (rvest)
+library (magrittr)
+library(XML)
+library(httr)
+library(selectr)
+library(stringr)
+```
+
+<h4>Example 1:</h4>
+
+Early American Foreign Service Database (EAFSD) http://www.eafsd.org/-The EAFSD provides biographical and professional information about all foreign service officers in a relational data structure. Start by searching the database. In the name field search john quincy adams. This yields one result. Click on the result to view the record in the database. The record has two parts with useful data that we might want to scrape. There is biographical data on the side and data about his assignments in the center. 
+
+Now using rstudio the first step is to esablish a connection with a site.
+
+```{r}
+eafsd_JQA <- html_session ("http://www.eafsd.org/individuals/14/")
+```
+
+Use the html_table command to parse html into a data frame.
+```{r}
+jqatable<-html_table (eafsd_JQA)
+```
+
+This creates a file that we can view.
+```{r}
+#View (jqatable)
+```
+
+At first glance this seems to be data frame but it is actually a list that has a dataframe within it. We can verify this by running the class command.
+
+```{r}
+class(jqatable)
+```
+
+The result is that it is a list.
+
+To isolate the dataframe itself use
+
+```{r}
+jqa_service<-jqatable[[1]]
+```
+
+Then view the results
+
+```{r}
+#View(jqa_service)
+```
+
+Notice how both seem to be the same output but it is important to realize that they are different and these differences are helpful in explaining how to grab parts of a website. One way to view this is to examine the environment in RStudio. Open the values for jqatable and observe that there is a list of 1 and the that element is a 'data.frame'. 
+On the other hand jqa_service is a set of data ( Notice that in the environment jqa_service is in the data part not the values.) that allows you select elements within the dataframe. Using the code jqa_service<-jqatable[[1]] isolates the data frame includes double brackets and the number 1. jqatable[[1]] This is selecting the first element within the list of html and names that function jqa_service.
+
+The last part of this example is to select the biographical section of the website. This was the area on the left side of the result page. The key to accomplishing this is to select the appropriate css element so that rvest can grab the data within the appropriate region of the webpage.
+
+The code for this will take a html session and use magrittr to construct a pipe function to say then use the rvest command html_nodes to find the element sidebar and capture all data with the css p and then create a html table.
+
+```{r}
+#Not working-Odd Worked before in tutorial Table is not TRUE
+jqa_bio <- eafsd_JQA %>%
+html_nodes("#sidebar p") %>%
+html_table()
+View (jqa_bio)
+
+```
+
+Finally, if we use the stringr package we can take an additional step by splitting the data in the sidebar area using the colons. Instead of turning the item into a html table we can create an html text file and then use stringr's command to split the html data using the colon and dividing the data into 2 columns and then create a data frame.
+
+
+```{r}
+jqa_bio <- eafsd_JQA %>%
+html_nodes("#sidebar p") %>%
+html_text() %>%
+str_split_fixed(":", 2) %>%
+as.data.frame()
+```
+
+
+In order to identify the appropriate commands it is necessary to examine the html and css markup. 
+
+
+
+

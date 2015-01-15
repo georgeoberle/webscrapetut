@@ -15,19 +15,22 @@ There are many useful sites that contain pieces of information that inform or ar
 
 <h3>Access and Install</h3>
 
-Access is easy from Hadley Wickham’s GitHub (https://github.com/hadley/rvest).
-Basics
+Access to the package is from Hadley Wickham’s GitHub (https://github.com/hadley/rvest).
+
+<h3>Basics</h3>
 
 Wickham created the tool in order to allow for typical web scraping tasks that many python users are familiar with. There are several good lessons available at The Programming Historian for those that are more familiar with python. The advantage of rvest is that it requires less time to understand the nuances of the programming language so the scholar can spend more time considering the crux of their scholarship. It is designed to work with magrittr which helps simplify your code. Rvest allows users to connect to a site within rstudio and then grab parts (or all) of a site. Users can navigate to websites using rstudio while connected in rvest.
 
 The documentation claims that users can do the following:
 
-    Create an html document from a url, a file on disk or a string containing html with html().
-    Select parts of a document using css selectors: html_nodes(doc, "table td")
-    Extract components with html_tag() (the name of the tag), html_text() (all text inside the tag), html_attr() (contents of a single attribute) and html_attrs() (all attributes).
-    Parse tables into data frames with html_table().
-    Extract, modify and submit forms with html_form(), set_values() and submit_form()
-    Navigate around a website as if you’re in a browser with html_session(), jump_to(), follow_link(), back(), forward(), submit_form() and so on.
+   <ul> 
+   <li>Create an html document from a url, a file on disk or a string containing html with html().</li>
+    <li>Select parts of a document using css selectors: html_nodes(doc, "table td")</li>
+   <li> Extract components with html_tag() (the name of the tag), html_text() (all text inside the tag), html_attr() (contents of a single attribute) and html_attrs() (all attributes).</li>
+   <li> Parse tables into data frames with html_table().</li>
+   <li> Extract, modify and submit forms with html_form(), set_values() and submit_form()</li>
+   <li> Navigate around a website as if you’re in a browser with html_session(), jump_to(), follow_link(), back(), forward(), submit_form() and so on.</li>
+    </ul>
 
 Some Packages that may be useful and why
 
@@ -111,7 +114,7 @@ class(jqatable)
 
 The result is that it is a list.
 
-To isolate the dataframe itself use
+To isolate the dataframe itself use the double brackets[[]]
 
 ```{r}
 jqa_service<-jqatable[[1]]
@@ -132,10 +135,10 @@ The code for this will take a html session and use magrittr to construct a pipe 
 
 ```{r}
 #Not working-Odd Worked before in tutorial Table is not TRUE
-jqa_bio <- eafsd_JQA %>%
-html_nodes("#sidebar p") %>%
-html_table()
-View (jqa_bio)
+#jqa_bio <- eafsd_JQA %>%
+#html_nodes("#sidebar p") %>%
+#html_table()
+#View (jqa_bio)
 
 ```
 
@@ -151,7 +154,7 @@ as.data.frame()
 ```
 
 
-In order to identify the appropriate commands it is necessary to examine the html and css markup. 
+
 
 
 

@@ -135,10 +135,10 @@ The code for this will take a html session and use magrittr to construct a pipe 
 
 ```{r}
 #Not working-Odd Worked before in tutorial Table is not TRUE
-#jqa_bio <- eafsd_JQA %>%
-#html_nodes("#sidebar p") %>%
-#html_table()
-#View (jqa_bio)
+jqa_bio <- eafsd_JQA %>%
+html_nodes("#sidebar p") %>%
+html_table()
+View (jqa_bio)
 
 ```
 
@@ -150,8 +150,22 @@ jqa_bio <- eafsd_JQA %>%
 html_nodes("#sidebar p") %>%
 html_text() %>%
 str_split_fixed(":", 2) %>%
-as.data.frame()
+as.data.frame() 
+View (jqa_bio)
 ```
+
+```{r}
+paris<- html_session ("http://eafsd.org/locations/199/")
+```
+
+```{r}
+paris_content <- paris %>%
+html_nodes("#content tr") %>%
+html_table() %>%
+View (paris_content)
+#content table tbody tr
+```
+
 
 <h4>Example 2: Archival Finding Aid structured using EAD</h4>
 
@@ -169,6 +183,7 @@ html_nodes(".compMargin01 tr") %>%
 html_text()
 View(apseadelement)
 ```
+
 
 ```{r}
 apsead1<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")

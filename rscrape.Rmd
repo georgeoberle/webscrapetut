@@ -153,6 +153,19 @@ str_split_fixed(":", 2) %>%
 as.data.frame() 
 View (jqa_bio)
 ```
+House of Representatives Party Divisions
+```{r}
+
+house_party<-html_session ("http://history.house.gov/Institution/Party-Divisions/Party-Divisions/")
+
+house_party %>%
+html_nodes("table") %>%
+html_table() %>%
+View (house_party)
+#content table tbody tr
+
+```
+
 
 ```{r}
 paris<- html_session ("http://eafsd.org/locations/199/")

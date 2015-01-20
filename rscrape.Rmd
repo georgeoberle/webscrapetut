@@ -41,7 +41,7 @@ rvest: rvest makes it easy to harvest (a.k.a. scrape) data from web pages by pro
 ```{r}
 library(rvest)
 ```
-Also helpful is magrittr: magrittr is a forward pipe function that allows the rvest user to construct programming statements. The following symbol %<% is used to combine functions.
+Also helpful is magrittr: magrittr is a forward pipe function that allows the rvest user to construct programming statements. The following symbol %>% is used to combine functions.
 
 ```{r}
 library(magrittr)

@@ -17,6 +17,8 @@ There are many useful sites that contain pieces of information that inform or ar
 
 Access to the package is from Hadley Wickham’s GitHub (https://github.com/hadley/rvest).
 
+TODO: Add command to install. Note, [rvest](http://cran.rstudio.org/web/packages/rvest/) is on CRAN now.
+
 <h3>Basics</h3>
 
 Wickham created the tool in order to allow for typical web scraping tasks that many python users are familiar with. There are several good lessons available at The Programming Historian for those that are more familiar with python. The advantage of rvest is that it requires less time to understand the nuances of the programming language so the scholar can spend more time considering the crux of their scholarship. It is designed to work with magrittr which helps simplify your code. Rvest allows users to connect to a site within rstudio and then grab parts (or all) of a site. Users can navigate to websites using rstudio while connected in rvest.
@@ -135,10 +137,10 @@ The code for this will take a html session and use magrittr to construct a pipe 
 
 ```{r}
 #Not working-Odd Worked before in tutorial Table is not TRUE
-jqa_bio <- eafsd_JQA %>%
-html_nodes("#sidebar p") %>%
-html_table()
-View (jqa_bio)
+# jqa_bio <- eafsd_JQA %>%
+# html_nodes("#sidebar p") %>%
+# html_table()
+# View (jqa_bio)
 
 ```
 
@@ -151,17 +153,14 @@ html_nodes("#sidebar p") %>%
 html_text() %>%
 str_split_fixed(":", 2) %>%
 as.data.frame() 
-View (jqa_bio)
 ```
 House of Representatives Party Divisions
 ```{r}
-
-house_party<-html_session ("http://history.house.gov/Institution/Party-Divisions/Party-Divisions/")
+house_party<-html_session("http://history.house.gov/Institution/Party-Divisions/Party-Divisions/")
 
 house_party %>%
 html_nodes("table") %>%
-html_table() %>%
-View (house_party)
+html_table() 
 #content table tbody tr
 
 ```
@@ -172,10 +171,9 @@ paris<- html_session ("http://eafsd.org/locations/199/")
 ```
 
 ```{r}
-paris_content <- paris %>%
-html_nodes("#content tr") %>%
-html_table() %>%
-View (paris_content)
+# paris_content <- paris %>%
+# html_nodes("#content tr") %>%
+# html_table() 
 #content table tbody tr
 ```
 
@@ -194,7 +192,6 @@ apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archive
 apseadelement<- apsead %>%
 html_nodes(".compMargin01 tr") %>%
 html_text()
-View(apseadelement)
 ```
 
 
@@ -203,7 +200,6 @@ apsead1<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archiv
 apseadelement1<- apsead %>%
 html_nodes(".abstract p") %>%
 html_table()
-View(apseadelement1)
 ```
 
 ```{r}
@@ -211,7 +207,6 @@ apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archive
 apseadelement2<- apsead %>%
 html_nodes(".div.content tr") %>%
 html_table()
-View(apseadelement2)
 ```
 
 

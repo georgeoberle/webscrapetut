@@ -7,7 +7,9 @@ output: html_document
 
 This is a tutorial meant for historians to use in order to use the rvest package to scrape the web.
 
-<h1>Harvesting the Web using r</h1>
+# Harvesting the Web using r
+
+TODO: Use markdown style for headers instead of HTML directly.
 
 <h3>What is rvest?</h3>
 
@@ -21,7 +23,9 @@ TODO: Add command to install. Note, [rvest](http://cran.rstudio.org/web/packages
 
 <h3>Basics</h3>
 
-Wickham created the tool in order to allow for typical web scraping tasks that many python users are familiar with. There are several good lessons available at The Programming Historian for those that are more familiar with python. The advantage of rvest is that it requires less time to understand the nuances of the programming language so the scholar can spend more time considering the crux of their scholarship. It is designed to work with magrittr which helps simplify your code. Rvest allows users to connect to a site within rstudio and then grab parts (or all) of a site. Users can navigate to websites using rstudio while connected in rvest.
+Wickham created the tool in order to allow for typical web scraping tasks that many python users are familiar with. There are several good lessons available at The Programming Historian for those that are more familiar with python. The advantage of rvest is that it requires less time to understand the nuances of the programming language so the scholar can spend more time considering the crux of their scholarship. It is designed to work with magrittr which helps simplify your code. Rvest allows users to connect to a site within R and then grab parts (or all) of a site. Users can navigate to websites using rstudio while connected in rvest.
+
+TODO: Links to the programming historial turorials
 
 The documentation claims that users can do the following:
 
@@ -33,6 +37,8 @@ The documentation claims that users can do the following:
    <li> Extract, modify and submit forms with html_form(), set_values() and submit_form()</li>
    <li> Navigate around a website as if you’re in a browser with html_session(), jump_to(), follow_link(), back(), forward(), submit_form() and so on.</li>
     </ul>
+    
+TODO: Markdown not HTML for the list above. Use `code` like this for code and functions.
 
 Some Packages that may be useful and why
 
@@ -57,11 +63,15 @@ library(XML)
 
 httr: Provides useful tools for working with HTTP. The API is based around http verbs (GET(), POST(), etc) with pluggable components to control the request (authenticate(), add_headers() and so on).
 
+TODO: We shouldn't need to load HTTR or XML directly. I could be wrong about that.
+
 ```{r}
 library(httr)
 ```
 
-sectr:Translates a CSS3 selector into an equivalent XPath expression. This allows us to use CSS selectors when working with the XML package as it can only evaluate XPath expressions. Also provided are convenience functions useful for using CSS selectors on XML nodes. This package is a port of the Python package “cssselect”
+selectr:Translates a CSS3 selector into an equivalent XPath expression. This allows us to use CSS selectors when working with the XML package as it can only evaluate XPath expressions. Also provided are convenience functions useful for using CSS selectors on XML nodes. This package is a port of the Python package “cssselect”
+
+TODO: Is selectr really necessary?
 
 ```{r}
 library(selectr)
@@ -73,6 +83,23 @@ stringr: is a set of simple wrappers that make R’s string functions more consi
 library(stringr)
 ```
 
+
+----- 
+
+My suggestion for scraping Adams:
+
+```{r}
+url <- "http://www.eafsd.org/individuals/14/"
+
+url %>%
+  html() %>%
+  html_nodes("table") %>%
+  .[[1]] %>% # get the first element in the list 
+  html_table() 
+```
+
+
+-----
 
 <H3>Examples for Historians</H3>
 

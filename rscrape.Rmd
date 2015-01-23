@@ -9,40 +9,35 @@ This is a tutorial meant for historians to use in order to use the rvest package
 
 # Harvesting the Web using r
 
-TODO: Use markdown style for headers instead of HTML directly.
 
-<h3>What is rvest?</h3>
+##What is rvest?
 
 There are many useful sites that contain pieces of information that inform or are useful to your work. The ability to extract meaningful data is a useful tool to include in your toolbox. R has a package called rvest that allows you to simply scrape a website in order to use the content in a way that is more meaningful to your own work. The tool is free and open and works well within the RStudio environment.
 
-<h3>Access and Install</h3>
+##Access and Install
 
 Access to the package is from Hadley Wickham’s GitHub (https://github.com/hadley/rvest).
 
 TODO: Add command to install. Note, [rvest](http://cran.rstudio.org/web/packages/rvest/) is on CRAN now.
 
-<h3>Basics</h3>
+##Basics
 
 Wickham created the tool in order to allow for typical web scraping tasks that many python users are familiar with. There are several good lessons available at The Programming Historian for those that are more familiar with python. The advantage of rvest is that it requires less time to understand the nuances of the programming language so the scholar can spend more time considering the crux of their scholarship. It is designed to work with magrittr which helps simplify your code. Rvest allows users to connect to a site within R and then grab parts (or all) of a site. Users can navigate to websites using rstudio while connected in rvest.
 
-TODO: Links to the programming historial turorials
+There are excellent tutorials on other tools available at *The Programming Historian* The url is http://programminghistorian.org/
 
 The documentation claims that users can do the following:
 
-   <ul> 
-   <li>Create an html document from a url, a file on disk or a string containing html with html().</li>
-    <li>Select parts of a document using css selectors: html_nodes(doc, "table td")</li>
-   <li> Extract components with html_tag() (the name of the tag), html_text() (all text inside the tag), html_attr() (contents of a single attribute) and html_attrs() (all attributes).</li>
-   <li> Parse tables into data frames with html_table().</li>
-   <li> Extract, modify and submit forms with html_form(), set_values() and submit_form()</li>
-   <li> Navigate around a website as if you’re in a browser with html_session(), jump_to(), follow_link(), back(), forward(), submit_form() and so on.</li>
-    </ul>
-    
-TODO: Markdown not HTML for the list above. Use `code` like this for code and functions.
+* Create an html document from a url, a file on disk or a string containing html with html().
+* Select parts of a document using css selectors: html_nodes(doc, "table td")
+* Extract components with html_tag() (the name of the tag), html_text() (all text inside the tag), html_attr() (contents of a single attribute) and html_attrs() (all attributes).
+* Parse tables into data frames with html_table().
+* Extract, modify and submit forms with html_form(), set_values() and submit_form()
+* Navigate around a website as if you’re in a browser with html_session(), jump_to(), follow_link(), back(), forward(), submit_form() and so on.
 
-Some Packages that may be useful and why
+###Some Packages that may be useful and why
 
-rvest: rvest makes it easy to harvest (a.k.a. scrape) data from web pages by providing some helpful wrappers around XML and httr. This package depends on R 3.0.1 or greater. There is a built in demo that shows users how the codes work.
+**rvest:** rvest makes it easy to harvest (a.k.a. scrape) data from web pages by providing some helpful wrappers around XML and httr. This package depends on R 3.0.1 or greater. There is a built in demo that shows users how the codes work.
 
 ```{r}
 library(rvest)
@@ -54,28 +49,6 @@ library(magrittr)
 ```
 
 Optional Packages
-
-XML: Tools for parsing and generating XML within R. This package provides many approaches for both reading and creating XML (and HTML) documents (including DTDs). It allows access on local machines and via HTTP or FTP.  Mostly helpful for those that are more advanced users than I that want to follow the xpath methods of scraping.
-
-```{r}
-library(XML)
-```
-
-httr: Provides useful tools for working with HTTP. The API is based around http verbs (GET(), POST(), etc) with pluggable components to control the request (authenticate(), add_headers() and so on).
-
-TODO: We shouldn't need to load HTTR or XML directly. I could be wrong about that.
-
-```{r}
-library(httr)
-```
-
-selectr:Translates a CSS3 selector into an equivalent XPath expression. This allows us to use CSS selectors when working with the XML package as it can only evaluate XPath expressions. Also provided are convenience functions useful for using CSS selectors on XML nodes. This package is a port of the Python package “cssselect”
-
-TODO: Is selectr really necessary?
-
-```{r}
-library(selectr)
-```
 
 stringr: is a set of simple wrappers that make R’s string functions more consistent, simpler and easier to use.  It does this by ensuring that: function and argument names (and positions) are consistent, all functions deal with NA’s and zero length character appropriately, and the output data structures from each function matches the input data structures of other functions.
 
@@ -101,7 +74,7 @@ url %>%
 
 -----
 
-<H3>Examples for Historians</H3>
+##Examples for Historians
 
 I plan to develop several examples of common types of sources that historians encounter. Here are key library packages that may be helpful to load.
 
@@ -109,31 +82,38 @@ Tools needed
 ```{r}
 library (rvest)
 library (magrittr)
-library(XML)
-library(httr)
-library(selectr)
 library(stringr)
 ```
 
-<h4>Example 1:</h4>
+###Example 1:
 
-Early American Foreign Service Database (EAFSD) http://www.eafsd.org/-The EAFSD provides biographical and professional information about all foreign service officers in a relational data structure. Start by searching the database. In the name field search john quincy adams. This yields one result. Click on the result to view the record in the database. The record has two parts with useful data that we might want to scrape. There is biographical data on the side and data about his assignments in the center. 
+*Early American Foreign Service Database* (EAFSD) http://www.eafsd.org/-
+The EAFSD provides biographical and professional information about all foreign service officers in a relational data structure. Start by searching the database. In the name field search john quincy adams. This yields one result. Click on the result to view the record in the database. The record has two parts with useful data that we might want to scrape. There is biographical data on the side and data about his assignments in the center. 
 
-Now using rstudio the first step is to esablish a connection with a site.
+Using rstudio the first step is to esablish a connection with a site.
 
 ```{r}
 eafsd_JQA <- html_session ("http://www.eafsd.org/individuals/14/")
 ```
+This establishes a session and can be verified by using the class command.
 
-Use the html_table command to parse html into a data frame.
+```{r}
+class (eafsd_JQA)
+```
+
+Think of this as a live internet connection with the site specified. To make this into a usable set of data we need to use another set of commands.
+
+####Scraping the Main Content Area
+
+Use the html_table command to parse the html into a data frame.
+
 ```{r}
 jqatable<-html_table (eafsd_JQA)
 ```
 
-This creates a file that we can view.
-```{r}
-#View (jqatable)
-```
+This creates a file that we can view or save using the following commands.
+View (jqatable)
+write.csv(jqatable, file = "jqatable.csv")
 
 At first glance this seems to be data frame but it is actually a list that has a dataframe within it. We can verify this by running the class command.
 
@@ -141,7 +121,7 @@ At first glance this seems to be data frame but it is actually a list that has a
 class(jqatable)
 ```
 
-The result is that it is a list.
+The result is that it is a list. GO TODO This means...This is not necessarily what we want.
 
 To isolate the dataframe itself use the double brackets[[]]
 
@@ -149,27 +129,28 @@ To isolate the dataframe itself use the double brackets[[]]
 jqa_service<-jqatable[[1]]
 ```
 
-Then view the results
+Then view the results and view the class.
 
 ```{r}
 #View(jqa_service)
+class (jqa_service)
 ```
 
-Notice how both seem to be the same output but it is important to realize that they are different and these differences are helpful in explaining how to grab parts of a website. One way to view this is to examine the environment in RStudio. Open the values for jqatable and observe that there is a list of 1 and the that element is a 'data.frame'. 
-On the other hand jqa_service is a set of data ( Notice that in the environment jqa_service is in the data part not the values.) that allows you select elements within the dataframe. Using the code jqa_service<-jqatable[[1]] isolates the data frame includes double brackets and the number 1. jqatable[[1]] This is selecting the first element within the list of html and names that function jqa_service.
+Notice how both seem to be the same output but it is important to realize that they are different. These differences are helpful in explaining how to grab parts of a website. 
 
-The last part of this example is to select the biographical section of the website. This was the area on the left side of the result page. The key to accomplishing this is to select the appropriate css element so that rvest can grab the data within the appropriate region of the webpage.
+One way to view this is to examine the environment in RStudio. Open the values for jqatable and observe that there is a list of 1 and the that element is a 'data.frame'. 
 
-The code for this will take a html session and use magrittr to construct a pipe function to say then use the rvest command html_nodes to find the element sidebar and capture all data with the css p and then create a html table.
+On the other hand 'jqa_service'is a set of data that had 6 observations with 5 variables. Also notice that this is displayed in the data section of the environment window not the values section. 
 
-```{r}
-#Not working-Odd Worked before in tutorial Table is not TRUE
-# jqa_bio <- eafsd_JQA %>%
-# html_nodes("#sidebar p") %>%
-# html_table()
-# View (jqa_bio)
+To isolate the specific part of the web page that contains the relevant data use the double brackets and the number 1. Using the code jqa_service<-jqatable[[1]] 
+selects the first element within the list of html and names that function jqa_service.
 
-```
+####The Sidebar
+The last part of this example is to select the biographical section of the website. This is the area on the left side of the result page. The key to accomplishing this is to select the appropriate css element so that rvest can grab the data within the appropriate region of the webpage.
+
+The code for this will take a html session and use magrittr to construct a pipe function to nest directions with r. 
+
+then use the rvest command html_nodes to find the css element sidebar and capture all data within that element that has the css tag p and then create a html table.
 
 Finally, if we use the stringr package we can take an additional step by splitting the data in the sidebar area using the colons. Instead of turning the item into a html table we can create an html text file and then use stringr's command to split the html data using the colon and dividing the data into 2 columns and then create a data frame.
 
@@ -181,33 +162,29 @@ html_text() %>%
 str_split_fixed(":", 2) %>%
 as.data.frame() 
 ```
-House of Representatives Party Divisions
+
+###Example 2:
+
+####House of Representatives Party Divisions
+
+The site (http://history.house.gov/Institution/Party-Divisions/Party-Divisions/) is made available from the Historians of the Office of the House of Representatives titled *Party Divisions of the House of Representatives: 1789–Present*
+
+It documents the party membership of members of the U.S. House of Representatives and is derived from several sources including *The Biographical Directory of the U.S. Congress*, the House Clerk’s Election Statistics, Congressional Quarterly’s *Guide to U.S. Elections*, Michael Dubin’s *United States Congressional Elections*, and Kenneth Martis’s *Historical Atlas of Political Parties in the United States Congress*.
+
+####Establish a session and create a table from the site.
 ```{r}
 house_party<-html_session("http://history.house.gov/Institution/Party-Divisions/Party-Divisions/")
+house_party_table<-html_table (house_party)
+class (house_party_table)
 
-house_party %>%
-html_nodes("table") %>%
-html_table() 
-#content table tbody tr
+house_party_data<-house_party_table[[1]]
 
 ```
 
 
-```{r}
-paris<- html_session ("http://eafsd.org/locations/199/")
-```
+###Example 3: Archival Finding Aid structured using Encoded Archival Description (EAD)
 
-```{r}
-# paris_content <- paris %>%
-# html_nodes("#content tr") %>%
-# html_table() 
-#content table tbody tr
-```
-
-
-<h4>Example 2: Archival Finding Aid structured using EAD</h4>
-
-The American Philosophical Society EAD finding Aid
+The American Philosophical Society Archives finding aid 
 ```{r}
  apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")
 ```

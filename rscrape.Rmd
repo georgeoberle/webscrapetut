@@ -184,7 +184,8 @@ house_party_data<-house_party_table[[1]]
 
 ###Example 3: Archival Finding Aid structured using Encoded Archival Description (EAD)
 
-The American Philosophical Society Archives finding aid 
+The American Philosophical Society Archives finding aid: The Archives of the APS contains records of the first learned society founded in the United States. The finding aid is available at (http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736). The APS records is organized into thirteen record groups dating back to 1743. The Society's archives extensively documents not only the organization's historical development but also its role in American history and the history of science and technology.
+As with the other examples begin by establishing a session.
 ```{r}
  apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")
 ```
@@ -192,25 +193,26 @@ The American Philosophical Society Archives finding aid
 This establishes the session on the American Philosophical Society's Library web site. Next view the css coding. Assuming we only want to bring in the section of the site with the detailed inventory select the .compMargin01 element.
 
 ```{r}
-apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")
-apseadelement<- apsead %>%
-html_nodes(".compMargin01 tr") %>%
-html_text()
+#apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")
+#apseadelement<- html_table (apsead) %>%
+#html_nodes(".compMargin01 tr") %>%
+#html_table()
 ```
 
 
 ```{r}
-apsead1<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")
-apseadelement1<- apsead %>%
-html_nodes(".abstract p") %>%
-html_table()
+#apsead1<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")
+#apseadelement1<- apsead %>%
+#html_nodes(".abstract p") %>%
+#html_table()
 ```
 
 ```{r}
-apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives.IIa-ead.xml")
-apseadelement2<- apsead %>%
-html_nodes(".div.content tr") %>%
-html_table()
+#apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives.IIa-ead.xml")
+#apseadelement2<- apsead %>%
+#html_nodes(".div.content tr") %>%
+#html_table()
+
 ```
 
 

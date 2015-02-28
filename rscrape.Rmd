@@ -16,7 +16,9 @@ There are many useful sites that contain pieces of information that inform or ar
 
 ##Access and Install
 
-Access to the package is from Hadley Wickham’s GitHub (https://github.com/hadley/rvest).
+Access to the package is from Hadley Wickham’s GitHub (https://github.com/hadley/rvest) or from CRAN.
+
+
 
 TODO: Add command to install. Note, [rvest](http://cran.rstudio.org/web/packages/rvest/) is on CRAN now.
 
@@ -26,7 +28,7 @@ Wickham created the tool in order to allow for typical web scraping tasks that m
 
 There are excellent tutorials on other tools available at *The Programming Historian* The url is http://programminghistorian.org/
 
-The documentation claims that users can do the following:
+The rvest documentation says  that users can do the following:
 
 * Create an html document from a url, a file on disk or a string containing html with html().
 * Select parts of a document using css selectors: html_nodes(doc, "table td")
@@ -56,22 +58,6 @@ stringr: is a set of simple wrappers that make R’s string functions more consi
 library(stringr)
 ```
 
-
------ 
-
-My suggestion for scraping Adams:
-
-```{r}
-url <- "http://www.eafsd.org/individuals/14/"
-
-url %>%
-  html() %>%
-  html_nodes("table") %>%
-  .[[1]] %>% # get the first element in the list 
-  html_table() 
-```
-
-
 -----
 
 ##Examples for Historians
@@ -87,133 +73,41 @@ library(stringr)
 
 ###Example 1:
 
-*Early American Foreign Service Database* (EAFSD) http://www.eafsd.org/-
-The EAFSD provides biographical and professional information about all foreign service officers in a relational data structure. Start by searching the database. In the name field search john quincy adams. This yields one result. Click on the result to view the record in the database. The record has two parts with useful data that we might want to scrape. There is biographical data on the side and data about his assignments in the center. 
+*Virginia County Records* (Library of Virginia) http://www.lva.virginia.gov/public/local/
+
+The Library of Virginia provides several crucial resources for historians. Several of these resources include guides to materials available from the Library of Virginia. These guides are available on the Library of Virginia's website. Some of these guides are created in tables on html pages. A good example is the site titled *A Guide to Virginia County and City Records on Microfilm*. These records are arranged by the locality. So this means that they are organized by county unless it has independent city status. The guides typically include columns that indicate a reel number and if there is a copy available for loan via interlibrary loan. Additionally there is a column that describes the content of the reels using the descriptor "Local Records Categories and Contents."
 
 Using rstudio the first step is to esablish a connection with a site.
 
 ```{r}
-eafsd_JQA <- html_session ("http://www.eafsd.org/individuals/14/")
+lva  <- html_session ("http://www.lva.virginia.gov/whatwehave/local/county_formation/index.htm")
 ```
+
 This establishes a session and can be verified by using the class command.
 
 ```{r}
-class (eafsd_JQA)
+class (lva)
 ```
 
-Think of this as a live internet connection with the site specified. To make this into a usable set of data we need to use another set of commands.
 
-####Scraping the Main Content Area
+Think of this as a live internet connection with the site specified. This session can also be established by simply typing in the specific url and then chained with specific commands as seen in the next section.
+
+####Scraping a page.
 
 Use the html_table command to parse the html into a data frame.
 
 ```{r}
-jqatable<-html_table (eafsd_JQA)
+vacountstaf  <- "http://www.lva.virginia.gov/public/local/results_all.asp?CountyID=VA265"
+vacountstaf %>%
+  html() %>%
+  html_node ("table") %>% 
+  html_table () %>%
+  as.data.frame() %>%
+  write.csv("stafford.csv")
+
+
+  
 ```
 
-This creates a file that we can view or save using the following commands.
-View (jqatable)
-write.csv(jqatable, file = "jqatable.csv")
-
-At first glance this seems to be data frame but it is actually a list that has a dataframe within it. We can verify this by running the class command.
-
-```{r}
-class(jqatable)
-```
-
-The result is that it is a list. GO TODO This means...This is not necessarily what we want.
-
-To isolate the dataframe itself use the double brackets[[]]
-
-```{r}
-jqa_service<-jqatable[[1]]
-```
-
-Then view the results and view the class.
-
-```{r}
-#View(jqa_service)
-class (jqa_service)
-```
-
-Notice how both seem to be the same output but it is important to realize that they are different. These differences are helpful in explaining how to grab parts of a website. 
-
-One way to view this is to examine the environment in RStudio. Open the values for jqatable and observe that there is a list of 1 and the that element is a 'data.frame'. 
-
-On the other hand 'jqa_service'is a set of data that had 6 observations with 5 variables. Also notice that this is displayed in the data section of the environment window not the values section. 
-
-To isolate the specific part of the web page that contains the relevant data use the double brackets and the number 1. Using the code jqa_service<-jqatable[[1]] 
-selects the first element within the list of html and names that function jqa_service.
-
-####The Sidebar
-The last part of this example is to select the biographical section of the website. This is the area on the left side of the result page. The key to accomplishing this is to select the appropriate css element so that rvest can grab the data within the appropriate region of the webpage.
-
-The code for this will take a html session and use magrittr to construct a pipe function to nest directions with r. 
-
-then use the rvest command html_nodes to find the css element sidebar and capture all data within that element that has the css tag p and then create a html table.
-
-Finally, if we use the stringr package we can take an additional step by splitting the data in the sidebar area using the colons. Instead of turning the item into a html table we can create an html text file and then use stringr's command to split the html data using the colon and dividing the data into 2 columns and then create a data frame.
-
-
-```{r}
-jqa_bio <- eafsd_JQA %>%
-html_nodes("#sidebar p") %>%
-html_text() %>%
-str_split_fixed(":", 2) %>%
-as.data.frame() 
-```
-
-###Example 2:
-
-####House of Representatives Party Divisions
-
-The site (http://history.house.gov/Institution/Party-Divisions/Party-Divisions/) is made available from the Historians of the Office of the House of Representatives titled *Party Divisions of the House of Representatives: 1789–Present*
-
-It documents the party membership of members of the U.S. House of Representatives and is derived from several sources including *The Biographical Directory of the U.S. Congress*, the House Clerk’s Election Statistics, Congressional Quarterly’s *Guide to U.S. Elections*, Michael Dubin’s *United States Congressional Elections*, and Kenneth Martis’s *Historical Atlas of Political Parties in the United States Congress*.
-
-####Establish a session and create a table from the site.
-```{r}
-house_party<-html_session("http://history.house.gov/Institution/Party-Divisions/Party-Divisions/")
-house_party_table<-html_table (house_party)
-class (house_party_table)
-
-house_party_data<-house_party_table[[1]]
-
-```
-
-
-###Example 3: Archival Finding Aid structured using Encoded Archival Description (EAD)
-
-The American Philosophical Society Archives finding aid: The Archives of the APS contains records of the first learned society founded in the United States. The finding aid is available at (http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736). The APS records is organized into thirteen record groups dating back to 1743. The Society's archives extensively documents not only the organization's historical development but also its role in American history and the history of science and technology.
-As with the other examples begin by establishing a session.
-```{r}
- apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")
-```
-
-This establishes the session on the American Philosophical Society's Library web site. Next view the css coding. Assuming we only want to bring in the section of the site with the detailed inventory select the .compMargin01 element.
-
-```{r}
-#apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")
-#apseadelement<- html_table (apsead) %>%
-#html_nodes(".compMargin01 tr") %>%
-#html_table()
-```
-
-
-```{r}
-#apsead1<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")
-#apseadelement1<- apsead %>%
-#html_nodes(".abstract p") %>%
-#html_table()
-```
-
-```{r}
-#apsead<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives.IIa-ead.xml")
-#apseadelement2<- apsead %>%
-#html_nodes(".div.content tr") %>%
-#html_table()
-
-```
-
-
+You will see that the data is not perfect but it has been Now that this data is saved into a csv file it is can easily cleaned and made into tidy data using Hadley Wickham's packaged dplyr and tidr.
 

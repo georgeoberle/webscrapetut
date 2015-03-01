@@ -117,8 +117,10 @@ Much of my work is focused the establishment, growth, and diversification of kno
 carnlib  <- "https://en.wikipedia.org/wiki/List_of_Carnegie_libraries_in_the_United_States"
 carnlib %>%
   html() %>%
-  html_node ("#mw-content-text") %>% 
-  html_text () %>%
+  html_node (xpath='//*[@id="mw-content-text"]/table[1]') %>% 
+  html_table() %>%
+  as.data.frame() %>%
+  write.csv("carnegielibrary.csv")
  
 ```
 

@@ -104,7 +104,8 @@ vacountstaf %>%
   html_table () %>%
   as.data.frame() %>%
   write.csv("stafford.csv")
-  
+
+#problem with characters Ã
 ```
 
 You will see that the data is not perfect but it has been Now that this data is saved into a csv file it is can easily cleaned and made into tidy data using Hadley Wickham's packaged dplyr and tidr.
@@ -121,7 +122,7 @@ carnlib %>%
   html_table() %>%
   as.data.frame() %>%
   write.csv("carnegielibrary.csv")
- 
+ #Problems with this is that there are odd character transfers that are not numeric.
 ```
 
 

@@ -119,10 +119,7 @@ carnlib %>%
   html() %>%
   html_node ("#mw-content-text") %>% 
   html_text () %>%
-  View()
-  
-  as.data.frame() %>%
-  write.csv("stafford.csv")
+ 
 ```
 
 
@@ -172,24 +169,6 @@ apsead %>%
   as.data.frame() %>%
   write.csv("aps.csv")
   
-  View()
-  
-  View()
-  
-  as.data.frame() %>%
-  write.csv("stafford.csv")
-  
-  
-  html() %>%
-  html_nodes(".compMargin01")
-  html_table() %>%
-  View()
-write.csv(house_party_data,file="data.csv")
-
-<- html_session ("http://www.amphilsoc.org/mole/view?docId=ead/APS.Archives-ead.xml#d26860101e8658654068736")
-#apseadelement<- html_table (apsead) %>%
-#html_nodes(".compMargin01 tr") %>%
-#html_table()
 ```
 
 

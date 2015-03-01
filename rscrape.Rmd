@@ -110,6 +110,8 @@ vacountstaf %>%
 You will see that the data is not perfect but it has been Now that this data is saved into a csv file it is can easily cleaned and made into tidy data using Hadley Wickham's packaged dplyr and tidr.
 
 ###Example 2:
+Much of my work is focused the establishment, growth, and diversification of knowledge institutions. These are typically associated with cultural institutions like libraries, museums, archives, colleges and universities, and learned societies. The data that documents these institutions is typically dispursed in many different locations and does not cover a significant span of time. There are many sites dedicated to these types of institutions like the venerable *Scholarly Societies Site* (http://www.scholarly-societies.org/) made available from the University of Waterloo Library. Another useful place to find lists and tables has been wikipedia. Like all sites it is crucial to examine where the data is derived from but after checking the source this may be a good option for historians. For example, the wikipedia entry on "Carnegie Libraries in the United States" 
+
 
 ```{r}
 carnlib  <- "https://en.wikipedia.org/wiki/List_of_Carnegie_libraries_in_the_United_States"

@@ -69,6 +69,7 @@ Tools needed
 library (rvest)
 library (magrittr)
 library(stringr)
+library(dplyr)
 ```
 
 ###Example 1:
@@ -98,12 +99,14 @@ Use the html_table command to parse the html into a data frame.
 
 ```{r}
 vacountstaf  <- "http://www.lva.virginia.gov/public/local/results_all.asp?CountyID=VA265"
-vacountstaf %>%
-  html() %>%
+microfilm <- vacountstaf %>%
+  html(encoding = "ASCII") %>%
   html_node ("table") %>% 
   html_table () %>%
-  as.data.frame() %>%
-  write.csv("stafford.csv")
+  as.data.frame() 
+
+glimpse(microfilm)
+write.csv(microfilm, "stafford.csv")
 
 #problem with characters Ã
 ```

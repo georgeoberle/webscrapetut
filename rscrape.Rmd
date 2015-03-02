@@ -70,6 +70,7 @@ library (rvest)
 library (magrittr)
 library(stringr)
 library(dplyr)
+library(tidyr)
 ```
 
 ###Example 1:
@@ -94,8 +95,32 @@ class (lva)
 Think of this as a live internet connection with the site specified. This session can also be established by simply typing in the specific url and then chained with specific commands as seen in the next section.
 
 ####Scraping a page.
+In order to scrape a page it is helpful to have some knowledge of css because that is the primary element used to select parts of the site. After selecting the county that I want to examine, I can use the developer view from my browser to help identify the appropriate information to scrape. The add-on *SelectorGadget* can be helpful with this. (see: http://selectorgadget.com/) I selected Stafford County. The information that has been microfilmed is divided into several rows and columns. The rows have the descriptive data and the columns have the information like the reel number, if it is available for ILL, and the Local Records Categories and Contents. This information includes various types of local government records including Bonds/Commissions/Oaths, Business Records/Corporations/Partnerships, County Administrative Records, various types of county court records, Land Records, and the diverse set of vital records you would expect from a locality. Typically, it is difficult to manage these records because many counties have gaps in their holdings. It is therefore important to assure control over the pool of sources available for a project. Using the following methods it is easy to scrape these holdings of the materials available through ILL from the Library of Virginia. 
 
-Use the html_table command to parse the html into a data frame.
+Using the pipe function that is available in the package *magrittr* we can string a series of commands that allow us to connect to a website
+
+```{r}
+vacountstaf  <- "http://www.lva.virginia.gov/public/local/results_all.asp?CountyID=VA265"
+```
+
+This provides the named function vacountstaf. This means whenever we need to connect to that website we can use that shortcut **vacountstaf** instead of typing the whole website.
+Using the pipe function that is available in the package *magrittr* we can string a series of commands that allow us to connect to perform a series of actions all at once.
+
+
+```{r}
+
+  microfilm <- vacountstaf %>%
+  html()%>%
+  html_node ("table") %>% 
+  html_table () %>%
+  as.data.frame() 
+
+glimpse(microfilm)
+  
+```
+The example above used a connect to the Library of Virginia's County records page for Stafford County. Then it went through a series of commands that had r recognize that the pages were in HTML and that we wanted to select the element called "table" and then make it into a html table and then save it as a dataframe. This all worked perfectly but once we run the Glimpse command for our function there is a bug in the output. This site is older and does not use unicode so there are several characters that display as Â.
+
+To fix add encoding instructions in the html code section of the function which will look like this: html(encoding = "ASCII") Now that R knows to look for ASCII text this is what the process will look like.
 
 ```{r}
 vacountstaf  <- "http://www.lva.virginia.gov/public/local/results_all.asp?CountyID=VA265"
@@ -108,10 +133,9 @@ microfilm <- vacountstaf %>%
 glimpse(microfilm)
 write.csv(microfilm, "stafford.csv")
 
-#problem with characters Ã
 ```
 
-You will see that the data is not perfect but it has been Now that this data is saved into a csv file it is can easily cleaned and made into tidy data using Hadley Wickham's packaged dplyr and tidr.
+You will see that the data is not perfect but it has been Now that this data is saved into a csv file it is can easily cleaned and made into tidy data using Hadley Wickham's packages dplyr and tidyr.
 
 ###Example 2: Carnegie Libraries
 Much of my work is focused the establishment, growth, and diversification of knowledge institutions. These are typically associated with cultural institutions like libraries, museums, archives, colleges and universities, and learned societies. The data that documents these institutions is typically dispursed in many different locations and does not cover a significant span of time. There are many sites dedicated to these types of institutions like the venerable *Scholarly Societies Site* (http://www.scholarly-societies.org/) made available from the University of Waterloo Library. Another useful place to find lists and tables has been wikipedia. Like all sites it is crucial to examine where the data is derived from but after checking the source this may be a good option for historians. For example, the wikipedia entry on "Carnegie Libraries in the United States" 

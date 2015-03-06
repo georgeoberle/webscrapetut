@@ -5,7 +5,7 @@ date: "January 14, 2015"
 output: html_document
 ---
 
-This is a tutorial meant for historians to use in order to use the rvest package to scrape the web. It was created as one of several requirements for a course taught by Lincoln Mullen at George Mason University.
+This is a tutorial meant for historians to use in order to use the rvest package to scrape the web. It was created as one of several assignments for a course taught by Lincoln Mullen in the Fall Semester 2014 at George Mason University. (See http://lincolnmullen.com/courses/clio3.2014/)
 
 # Harvesting the Web using r
 
@@ -135,21 +135,23 @@ write.csv(microfilm, "stafford.csv")
 
 ```
 
-You will see that the data is not perfect but it has been Now that this data is saved into a csv file it is can easily cleaned and made into tidy data using Hadley Wickham's packages dplyr and tidyr.
+You will see that the data is not perfect but it now in decent shape to save using the write command to save the file. After putting the data into a csv file it is can easily cleaned and made into tidy data using Hadley Wickham's packages dplyr and tidyr.
 
 ###Example 2: Carnegie Libraries
 Much of my work is focused the establishment, growth, and diversification of knowledge institutions. These are typically associated with cultural institutions like libraries, museums, archives, colleges and universities, and learned societies. The data that documents these institutions is typically dispursed in many different locations and does not cover a significant span of time. There are many sites dedicated to these types of institutions like the venerable *Scholarly Societies Site* (http://www.scholarly-societies.org/) made available from the University of Waterloo Library. Another useful place to find lists and tables has been wikipedia. Like all sites it is crucial to examine where the data is derived from but after checking the source this may be a good option for historians. For example, the wikipedia entry on "Carnegie Libraries in the United States" 
 
 
+
 ```{r}
 carnlib  <- "https://en.wikipedia.org/wiki/List_of_Carnegie_libraries_in_the_United_States"
-carnlib %>%
+
+  wikilib  <- carnlib %>%
   html() %>%
-  html_node (xpath='//*[@id="mw-content-text"]/table[1]') %>% 
+  html_node (xpath='//*[@id="mw-content-text"]/table[1]') %>%
   html_table() %>%
-  as.data.frame() %>%
-  write.csv("carnegielibrary.csv")
- #Problems with this is that there are odd character transfers that are not numeric.
+  data.frame() %>%
+  glimpse()
+
 ```
 
 
